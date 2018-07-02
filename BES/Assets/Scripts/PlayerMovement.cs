@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour {
 	public float maxHealth { get; set; }
 	public TextMeshProUGUI healthBarText;
 
+	public Animator shield_anim;
+
 	void Start ()
 	{
 		player_rb = GetComponent<Rigidbody2D>();
@@ -66,10 +68,25 @@ public class PlayerMovement : MonoBehaviour {
 
 		//Test Damage Input
 		//Again, the player won't actually take damage when space bar is pressed.
-		if (Input.GetKey(KeyCode.Space))
+		if (Input.GetKey(KeyCode.L))
 		{
 			DealDamage(5);
 		}
+
+		if (shield_anim.GetBool("Shield"))
+		{
+			shield_anim.SetBool("Shield", false);
+			print("finished");
+		}
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			shield_anim.SetBool("Shield", true);
+			print("attack");
+		}
+
+	
+
 	}
 
 	//The function that calculates what the health is currently.

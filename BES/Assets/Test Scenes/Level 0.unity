@@ -147,6 +147,7 @@ MonoBehaviour:
   speed: 5
   healthBar: {fileID: 1964611891}
   healthBarText: {fileID: 2061180360}
+  shield_anim: {fileID: 105630350}
 --- !u!50 &105630346
 Rigidbody2D:
   serializedVersion: 4
@@ -260,7 +261,7 @@ Animator:
   m_GameObject: {fileID: 105630344}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a4643c12c5021794fa7b7481fcad85c5, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2c4c1055ed9101641aa8970a33190255, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
