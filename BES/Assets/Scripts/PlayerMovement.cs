@@ -6,33 +6,40 @@ using TMPro;
 
 public class PlayerMovement : MonoBehaviour {
 
+	///Movement Variables
 	Rigidbody2D player_rb;
 	public float speed;
 	private Vector2 moveVelocity;
 
-	//Health Bar Variables
+	///Health Bar Variables
 	public Slider healthBar;
 	public float currentHealth { get; set; }
 	public float maxHealth { get; set; }
 	public TextMeshProUGUI healthBarText;
 
-	public Animator shield_anim;
+	///Attacking Variables
+	private float timeBtwAttack;
+	public float startTimeBtwAttack;
+	private Animator player_anim;
+
+	//Parameters for OverlapCircleAll()
+	public Transform attackPos;
+	public float attackRange;
+	public LayerMask whatIsProjectile;
 
 	void Start ()
 	{
 		player_rb = GetComponent<Rigidbody2D>();
+		player_anim = GetComponent<Animator>();
 
-		//can be any value of course
+		//The Maximum Health the player has
 		maxHealth = 100f;
-
 		//This is to reset the value of the health bar to full health every time the game is loaded.
 		currentHealth = maxHealth;
-
 		///Visual representation of the health.
-		//Get the value of the slider 
+		//Get the value of the slider object, 
 		//set it to calculate health
 		healthBar.value = CalculateHealth();
-
 		//Display the intial health
 		healthBarText.text = "Health: " + currentHealth;
 
@@ -42,13 +49,11 @@ public class PlayerMovement : MonoBehaviour {
 	void Update ()
 	{
 		///NEW Movement Code
-		///
 		//This variable detects where we want to move
 		//This is a quick way to map movement! 
 		//Left Arrow key - Horizontal input becomes -1, Right Arrow key, 1, and so on with the Vertical
 		//In Edit -> Project settings -> input you can change these inputs.
-		Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Veritical"));
-
+		Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxis("Vertical"));
 		//Calculates the speed;
 		//While also normalizing diagonal speed
 		moveVelocity = moveInput.normalized * speed;
@@ -56,32 +61,45 @@ public class PlayerMovement : MonoBehaviour {
 		//Displays the CURRENT health
 		healthBarText.text = "Health: " + Mathf.Round(currentHealth);
 
-		//Test Damage Input
-		//Again, the player won't actually take damage when space bar is pressed.
-		if (Input.GetKey(KeyCode.L))
+		///Attacking Code
+		//Time between attack starts off as StartTimeBtwAttack everytime it is less than 0
+		//It seems like a paradox in the way its written here, actually.
+		if (timeBtwAttack <= 0)
 		{
-			DealDamage(5);
+			timeBtwAttack = startTimeBtwAttack;
+			//Enable the attack
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				player_anim.SetTrigger("attack");
+
+				//Here, I am making an array of 2d colliders 
+				//Whats in this array?
+				//It all depends on what the OverlapCircleAll() function has found within itself.
+				Collider2D[] projectilesToDeflect = Physics2D.OverlapCircleAll(attackPos.position,attackRange,whatIsProjectile);
+
+				for (int i = 0; i < projectilesToDeflect.Length; i++)
+				{
+					//Code that makes it reflect back. 
+					//Go back to this once the enemy ai is done.
+					Debug.Log("Reflect!");
+				}	
+			}
+
 		}
 
-		if (shield_anim.GetBool("Shield"))
+		else
 		{
-			shield_anim.SetBool("Shield", false);
-			print("finished");
+			//Start counting down to allow attack
+			timeBtwAttack -= Time.deltaTime;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			shield_anim.SetBool("Shield", true);
-			print("attack");
-		}
-
-	
-
+		
 	}
 
+	//Fixedupdate is called on every physics step in our game.
 	void FixedUpdate()
 	{
-		//Fixedupdate is called on every physics step in our game.
+		
 		player_rb.MovePosition(player_rb.position + moveVelocity *Time.fixedDeltaTime);
 
 	}
@@ -92,7 +110,6 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		return currentHealth / maxHealth;
 	}
-
 
 	//A temporary function used just to check if damage is being dealt to the player
 	//This will be deleted later, or perhaps changed so that when the player collides with an enemy/projectile,
@@ -124,5 +141,12 @@ public class PlayerMovement : MonoBehaviour {
 			print("Take Damage");
 			DealDamage(5);
 		}
+	}
+
+	//Visual representation of hitbox
+	void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(attackPos.position, attackRange);
 	}
 }

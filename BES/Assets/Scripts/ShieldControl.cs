@@ -18,11 +18,4 @@ public class ShieldControl : MonoBehaviour {
 		
 	}
 
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-		if (other.gameObject.tag == "projectile")
-		{
-			print("Reflect the projectile");
-		}
-	}
 }
