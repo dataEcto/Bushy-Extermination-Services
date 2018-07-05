@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	Rigidbody2D player_rb;
 	public float speed;
+	private Vector2 moveVelocity;
 
 	//Health Bar Variables
 	public Slider healthBar;
@@ -40,28 +41,17 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update ()
 	{
-		player_rb.velocity = new Vector2(0, 0);
+		///NEW Movement Code
+		///
+		//This variable detects where we want to move
+		//This is a quick way to map movement! 
+		//Left Arrow key - Horizontal input becomes -1, Right Arrow key, 1, and so on with the Vertical
+		//In Edit -> Project settings -> input you can change these inputs.
+		Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Veritical"));
 
-		//Movement
-		if (Input.GetKey(KeyCode.W))
-		{
-			player_rb.velocity += new Vector2(0, speed);
-		}
-
-		if (Input.GetKey(KeyCode.S))
-		{
-			player_rb.velocity += new Vector2(0, -speed);
-		}
-
-		if (Input.GetKey(KeyCode.D))
-		{
-			player_rb.velocity += new Vector2(speed, 0);
-		}
-
-		if (Input.GetKey(KeyCode.A))
-		{
-			player_rb.velocity += new Vector2(-speed, 0);
-		}
+		//Calculates the speed;
+		//While also normalizing diagonal speed
+		moveVelocity = moveInput.normalized * speed;
 
 		//Displays the CURRENT health
 		healthBarText.text = "Health: " + Mathf.Round(currentHealth);
@@ -86,6 +76,13 @@ public class PlayerMovement : MonoBehaviour {
 		}
 
 	
+
+	}
+
+	void FixedUpdate()
+	{
+		//Fixedupdate is called on every physics step in our game.
+		player_rb.MovePosition(player_rb.position + moveVelocity *Time.fixedDeltaTime);
 
 	}
 
