@@ -114,7 +114,7 @@ public class PlayerMovement : MonoBehaviour {
 	//A temporary function used just to check if damage is being dealt to the player
 	//This will be deleted later, or perhaps changed so that when the player collides with an enemy/projectile,
 	//This function will be called.
-	void DealDamage(float damageValue)
+	public void DealDamage(float damageValue)
 	{
 
 		//Deal damage to the health bar
@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	}
 
-	private void OnCollisionEnter2D(Collision2D other)
+	private void OnTriggerEnter2D(Collider2D other)
 	{
 		 if (other.gameObject.tag == "projectile")
 		{
