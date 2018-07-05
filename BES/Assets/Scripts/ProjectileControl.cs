@@ -39,8 +39,7 @@ public class ProjectileControl : MonoBehaviour {
 		if (collisionInfo.gameObject.tag == "player")
 		{
 			DestroyProjectile();
-			GetComponent<PlayerMovement>().DealDamage(damage);
-			Debug.Log("Take Damage");
+
 		}
 	}
 }
