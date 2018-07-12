@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour {
 	}
 
 	//Array of class Wave
-	public Wave[] waves;
+	public Wave[] wavesList;
 	//Index of wave
 	private int nextWave = 0;
 
@@ -74,7 +74,7 @@ public class EnemySpawner : MonoBehaviour {
 			{
 				//Start wave spawning
 				//IEnumeators use StartCoroutine
-				StartCoroutine(SpawnWave(waves[nextWave]));
+				StartCoroutine(SpawnWave(wavesList[nextWave]));
 			}
 			
 		}
@@ -95,8 +95,9 @@ public class EnemySpawner : MonoBehaviour {
 		waveCountDown = timeBetweenWaves;
 
 		//If the next wave is bigger than whats in the array,
-		if (nextWave + 1 > waves.Length - 1)
+		if (nextWave + 1 > wavesList.Length - 1)
 		{
+			//...Set it back to 0
 			nextWave = 0;
 			//We can do about any other function in here. For now
 			//It just loops.
@@ -162,3 +163,4 @@ public class EnemySpawner : MonoBehaviour {
 		
 	}
 }
+ 
