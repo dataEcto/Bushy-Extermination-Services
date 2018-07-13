@@ -16,9 +16,18 @@ public class EnemyControl : MonoBehaviour {
 	public Transform player;
 	public Transform otherEnemy;
 
+	///Health Bar Variables
+	public float currentHealth { get; set; }
+	public float maxHealth { get; set; }
+
 	void Start () {
 		timeBtwShots = startTimeBtwShots;
 		player = GameObject.FindGameObjectWithTag("Player").transform;
+
+		//The Maximum Health the enemy has
+		maxHealth = 10f;
+		//This is to reset the value of the health to full health every time the game is loaded.
+		currentHealth = maxHealth;
 	}
 	
 
@@ -56,4 +65,42 @@ public class EnemyControl : MonoBehaviour {
 			timeBtwShots -= Time.deltaTime;
 		}
 	}
+
+	float CalculateHealth()
+	{
+		return currentHealth / maxHealth;
+	}
+
+	//This function deals damage to the game object it is attached to
+	//By "deal damage", i technically mean that this function will subtract
+	//damageValue from currentHealth
+	//In this version, I basically got rid of any mention of the health bar ui
+	//since it wont be present for enemies
+	public void DealDamage(float damageValue)
+	{
+
+		//Deal damage to the health bar
+		currentHealth -= damageValue;
+	
+		//If the character is out of health, they die
+		if (currentHealth <= 0)
+		{
+			//This displays the health to be 0.
+			//This is to prevent negative numbers to show up
+			print("Enemy died");
+			Destroy(gameObject);
+		}
+
+	}
+
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.gameObject.tag == "projectile")
+		{
+			print("Take Damage");
+			DealDamage(5);
+		}
+	}
+
 }

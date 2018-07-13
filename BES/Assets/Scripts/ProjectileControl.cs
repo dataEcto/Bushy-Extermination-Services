@@ -6,12 +6,12 @@ public class ProjectileControl : MonoBehaviour {
 	public float speed;
 	public int damage;
 	private Transform player;
+	private GameObject playerScript;
 	private Vector2 target;
 	public bool reflectProjectile;
 	
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
-
 		target = new Vector2(player.position.x, player.position.y);
 
 	}
@@ -24,10 +24,13 @@ public class ProjectileControl : MonoBehaviour {
 		if (reflectProjectile == false)
 		{
 			transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+	
 		}
+		//This allows for reflection
 		else
 		{
 			transform.position = Vector2.MoveTowards(transform.position, target, -speed * Time.deltaTime);
+			
 		}
 		
 
@@ -35,6 +38,7 @@ public class ProjectileControl : MonoBehaviour {
 		if (transform.position.x == target.x && transform.position.y == target.y)
 		{
 			DestroyProjectile();
+			
 		}
 	}
 
@@ -54,6 +58,10 @@ public class ProjectileControl : MonoBehaviour {
 		if (collisionInfo.gameObject.tag == "shield_tag")
 		{
 			reflectProjectile = true;
+			//This function is here because
+			//Whenever I reflect the projectile, the player still ends up taking damage
+			//So a fix would be to restore health at the same time
+			GameObject.Find("Player").GetComponent<PlayerMovement>().RestoreHealth(6);
 		}
 
 	}

@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float timeBtwAttack;
 	public float startTimeBtwAttack;
 	private Animator player_anim;
+	public bool attacking;
 
 	//Parameters for OverlapCircleAll()
 	public Transform attackPos;
@@ -42,6 +43,8 @@ public class PlayerMovement : MonoBehaviour {
 		healthBar.value = CalculateHealth();
 		//Display the intial health
 		healthBarText.text = "Health: " + currentHealth;
+
+		attacking = false;
 
 	}
 	
@@ -66,36 +69,25 @@ public class PlayerMovement : MonoBehaviour {
 		//It seems like a paradox in the way its written here, actually.
 		if (timeBtwAttack <= 0)
 		{
+			
 			//Enable the attack
 			if (Input.GetKey("space"))
 			{
 				player_anim.SetTrigger("attack");
 
-				//Here, I am making an array of 2d colliders 
-				//Whats in this array?
-				//It all depends on what the OverlapCircleAll() function has found within itself.
-				Collider2D[] projectilesToDeflect = Physics2D.OverlapCircleAll(attackPos.position,attackRange,whatIsProjectile);
-
-				for (int i = 0; i < projectilesToDeflect.Length; i++)
-				{
-					//Code that makes it reflect back. 
-					//Go back to this once the enemy ai is done.
-					Debug.Log("Reflect!");
-				}
-
 				Debug.Log("Attacking");
-
+		
 				timeBtwAttack = startTimeBtwAttack;
 			}
 
 			
-
 		}
 
 		else
 		{
 			//Start counting down to allow attack
 			timeBtwAttack -= Time.deltaTime;
+				
 		}
 
 		
@@ -116,9 +108,9 @@ public class PlayerMovement : MonoBehaviour {
 		return currentHealth / maxHealth;
 	}
 
-	//A temporary function used just to check if damage is being dealt to the player
-	//This will be deleted later, or perhaps changed so that when the player collides with an enemy/projectile,
-	//This function will be called.
+	//This function deals damage to the game object it is attached to
+	//By "deal damage", i technically mean that this function will subtract
+	//damageValue from currentHealth
 	public void DealDamage(float damageValue)
 	{
 
@@ -136,6 +128,25 @@ public class PlayerMovement : MonoBehaviour {
 			print("You Died");
 			Destroy(gameObject);
 		}
+
+	}
+
+	//This code restores health
+	//Used for fixing the damage taking while reflecting issue
+	public void RestoreHealth(float healthGained)
+	{
+		Debug.Log("Healing");
+		//Deal damage to the health bar
+		currentHealth += healthGained;
+		healthBar.value = CalculateHealth();
+
+		//Prevent the player from restoring full health
+		if (currentHealth >= maxHealth)
+		{
+			currentHealth -= 1;
+			Debug.Log("Health has been restored to full");
+		}
+
 
 	}
 
