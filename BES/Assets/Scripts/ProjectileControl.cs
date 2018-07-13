@@ -7,6 +7,7 @@ public class ProjectileControl : MonoBehaviour {
 	public int damage;
 	private Transform player;
 	private Vector2 target;
+	public bool reflectProjectile;
 	
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -19,8 +20,16 @@ public class ProjectileControl : MonoBehaviour {
 	void Update () {
 
 		//This is basically the core of making the projectile move.
-		//If you want to have a homing projectile towards the player, change target with player
-		transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+		//If you want to have a homing projectile towards the player, change "target" with player
+		if (reflectProjectile == false)
+		{
+			transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+		}
+		else
+		{
+			transform.position = Vector2.MoveTowards(transform.position, target, -speed * Time.deltaTime);
+		}
+		
 
 		//If the x and y coordinates are equal to the targets coordinates
 		if (transform.position.x == target.x && transform.position.y == target.y)
@@ -41,5 +50,11 @@ public class ProjectileControl : MonoBehaviour {
 			DestroyProjectile();
 
 		}
+
+		if (collisionInfo.gameObject.tag == "shield_tag")
+		{
+			reflectProjectile = true;
+		}
+
 	}
 }

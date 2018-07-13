@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
 	public TextMeshProUGUI healthBarText;
 
 	///Attacking Variables
-	private float timeBtwAttack;
+	public float timeBtwAttack;
 	public float startTimeBtwAttack;
 	private Animator player_anim;
 
@@ -66,9 +66,8 @@ public class PlayerMovement : MonoBehaviour {
 		//It seems like a paradox in the way its written here, actually.
 		if (timeBtwAttack <= 0)
 		{
-			timeBtwAttack = startTimeBtwAttack;
 			//Enable the attack
-			if (Input.GetKeyDown(KeyCode.Space))
+			if (Input.GetKey("space"))
 			{
 				player_anim.SetTrigger("attack");
 
@@ -82,8 +81,14 @@ public class PlayerMovement : MonoBehaviour {
 					//Code that makes it reflect back. 
 					//Go back to this once the enemy ai is done.
 					Debug.Log("Reflect!");
-				}	
+				}
+
+				Debug.Log("Attacking");
+
+				timeBtwAttack = startTimeBtwAttack;
 			}
+
+			
 
 		}
 
