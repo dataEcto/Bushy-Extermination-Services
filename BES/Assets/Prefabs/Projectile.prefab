@@ -92,6 +92,7 @@ MonoBehaviour:
   speed: 10
   damage: 10
   reflectProjectile: 0
+  damageEnemies: 0
 --- !u!212 &212987916059315182
 SpriteRenderer:
   m_ObjectHideFlags: 1

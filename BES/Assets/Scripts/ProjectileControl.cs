@@ -8,12 +8,19 @@ public class ProjectileControl : MonoBehaviour {
 	private Transform player;
 	private GameObject playerScript;
 	private Vector2 target;
+
 	public bool reflectProjectile;
+	//In order to prevent the projectile from damaging the enemy when it isnt reflected
+	//I first set up this boolean
+	public bool damageEnemies;
+
 	
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		target = new Vector2(player.position.x, player.position.y);
-
+		//This gets set to false first.
+		//Go to ontriggerenter for more
+		damageEnemies = false;
 	}
 	
 
@@ -58,6 +65,9 @@ public class ProjectileControl : MonoBehaviour {
 		if (collisionInfo.gameObject.tag == "shield_tag")
 		{
 			reflectProjectile = true;
+			//Now that this is true, the projectile can now damage enemies!
+			damageEnemies = true;
+
 			//This function is here because
 			//Whenever I reflect the projectile, the player still ends up taking damage
 			//So a fix would be to restore health at the same time

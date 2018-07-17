@@ -149,6 +149,7 @@ MonoBehaviour:
   healthBarText: {fileID: 2061180360}
   timeBtwAttack: 0
   startTimeBtwAttack: 2
+  attacking: 0
   attackPos: {fileID: 262757021}
   attackRange: 0.5
   whatIsProjectile:
@@ -245,7 +246,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.01425764, y: -0.0051846504}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -256,7 +257,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.69670075, y: 0.7511389}
   m_EdgeRadius: 0
 --- !u!95 &105630350
 Animator:
@@ -572,7 +573,7 @@ MonoBehaviour:
   - Wavename: First
     enemy: {fileID: 4384432935427842, guid: 917826cf1e176884386ec81d1e66d29c, type: 2}
     amount: 1
-    spawnRate: 5
+    spawnRate: 1
   - Wavename: 2nd
     enemy: {fileID: 4384432935427842, guid: 917826cf1e176884386ec81d1e66d29c, type: 2}
     amount: 10
@@ -580,7 +581,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 1293701115}
   - {fileID: 1070523313}
-  timeBetweenWaves: 5
+  timeBetweenWaves: 2
   waveCountDown: 0
   state: 2
 --- !u!4 &863225412
