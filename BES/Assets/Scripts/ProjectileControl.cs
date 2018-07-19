@@ -6,7 +6,7 @@ public class ProjectileControl : MonoBehaviour {
 	public float speed;
 	public int damage;
 	private Transform player;
-	private GameObject playerScript;
+	private GameObject playerObject;
 	private Vector2 target;
 
 	public bool reflectProjectile;
@@ -17,6 +17,7 @@ public class ProjectileControl : MonoBehaviour {
 	
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
+		playerObject = GameObject.Find("Player");
 		target = new Vector2(player.position.x, player.position.y);
 		//This gets set to false first.
 		//Go to ontriggerenter for more
@@ -71,7 +72,10 @@ public class ProjectileControl : MonoBehaviour {
 			//This function is here because
 			//Whenever I reflect the projectile, the player still ends up taking damage
 			//So a fix would be to restore health at the same time
-			GameObject.Find("Player").GetComponent<PlayerMovement>().RestoreHealth(6);
+			//We use the playerObject that we instantiated earlier
+			playerObject.GetComponent<PlayerMovement>().RestoreHealth(6);
+
+			
 		}
 
 	}

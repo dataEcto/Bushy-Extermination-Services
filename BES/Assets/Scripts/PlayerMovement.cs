@@ -17,6 +17,11 @@ public class PlayerMovement : MonoBehaviour {
 	public float maxHealth { get; set; }
 	public TextMeshProUGUI healthBarText;
 
+	//Progress Bar Variables
+	public Slider progressBar;
+	public float currentProgress { get; set; }
+	public float maxProgress { get; set; }
+
 	///Attacking Variables
 	public float timeBtwAttack;
 	public float startTimeBtwAttack;
@@ -44,6 +49,13 @@ public class PlayerMovement : MonoBehaviour {
 		//Display the intial health
 		healthBarText.text = "Health: " + currentHealth;
 
+		//The maximum amount of points needed to fill out the Progress Bar
+		maxProgress = 20f;
+		//Reset the progress bar to 0 everytime the game starts
+		currentProgress = 0;
+		//Similar to the healtbar, we need to set the value of the Progress Bar/Slider object
+		progressBar.value = CalculateProgress();
+
 		attacking = false;
 
 	}
@@ -63,6 +75,8 @@ public class PlayerMovement : MonoBehaviour {
 
 		//Displays the CURRENT health
 		healthBarText.text = "Health: " + Mathf.Round(currentHealth);
+		//Displays the CURRENT progress
+		progressBar.value = CalculateProgress();
 
 		///Attacking Code
 		//Time between attack starts off as StartTimeBtwAttack everytime it is less than 0
@@ -106,6 +120,29 @@ public class PlayerMovement : MonoBehaviour {
 	float CalculateHealth()
 	{
 		return currentHealth / maxHealth;
+	}
+
+	//Same as above
+	float CalculateProgress()
+	{
+		return currentProgress / maxProgress;
+	}
+
+	//This method will fill up the progress bar
+	//Whenever the reflected projectile hits an enemy!
+	//This method will be called in EnemyControl
+	//Because there is code in there that focues on what to do
+	//When the enemy is hit
+	public void fillBar(float progressValue)
+	{
+		currentProgress += progressValue;
+		progressBar.value = CalculateProgress();
+
+		if (currentProgress > maxProgress)
+		{
+			currentProgress = maxProgress;
+
+		}
 	}
 
 	//This function deals damage to the game object it is attached to

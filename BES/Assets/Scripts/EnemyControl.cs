@@ -12,18 +12,22 @@ public class EnemyControl : MonoBehaviour {
 	private float timeBtwShots;
 	public float startTimeBtwShots;
 
+
+	//Stuff that goes in the inspector to make this script work well
 	public GameObject projectile;
 	public Transform player;
-	public Transform otherEnemy;
 
 	///Health Bar Variables
 	public float currentHealth { get; set; }
 	public float maxHealth { get; set; }
 
+	//The player gameobject, which we will get the script from
+	public GameObject playerObject;
+
 	void Start () {
 		timeBtwShots = startTimeBtwShots;
 		player = GameObject.FindGameObjectWithTag("Player").transform;
-
+		playerObject = GameObject.Find("Player");
 		//The Maximum Health the enemy has
 		maxHealth = 5f;
 		//This is to reset the value of the health to full health every time the game is loaded.
@@ -104,6 +108,7 @@ public class EnemyControl : MonoBehaviour {
 		if (other.gameObject.tag == "projectile" && other.gameObject.GetComponent<ProjectileControl>().damageEnemies == true)
 		{
 			DealDamage(5);
+			playerObject.GetComponent<PlayerMovement>().fillBar(5);
 		}
 	}
 
