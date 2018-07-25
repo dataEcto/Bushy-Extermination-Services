@@ -6,6 +6,8 @@ using TMPro;
 
 public class PlayerMovement : MonoBehaviour {
 
+	public enum PlayerState {SHIELD,GUN}
+
 	///Movement Variables
 	Rigidbody2D player_rb;
 	public float speed;
@@ -21,17 +23,23 @@ public class PlayerMovement : MonoBehaviour {
 	public Slider progressBar;
 	public float currentProgress { get; set; }
 	public float maxProgress { get; set; }
+	public TextMeshProUGUI progressBarText;
 
 	///Attacking Variables
 	public float timeBtwAttack;
 	public float startTimeBtwAttack;
 	private Animator player_anim;
-	public bool attacking;
+	//Gun Variables
+	public GameObject bulletPrefab;
+	public Transform bulletSpawn;
 
 	//Parameters for OverlapCircleAll()
 	public Transform attackPos;
 	public float attackRange;
 	public LayerMask whatIsProjectile;
+
+	//State Control
+	public PlayerState state = PlayerState.SHIELD;
 
 	void Start ()
 	{
@@ -45,9 +53,11 @@ public class PlayerMovement : MonoBehaviour {
 		///Visual representation of the health.
 		//Get the value of the slider object, 
 		//set it to calculate health
+		//CalculateHealth() is mainly used when the damage function and healing function are called
 		healthBar.value = CalculateHealth();
 		//Display the intial health
 		healthBarText.text = "Health: " + currentHealth;
+
 
 		//The maximum amount of points needed to fill out the Progress Bar
 		maxProgress = 20f;
@@ -55,12 +65,14 @@ public class PlayerMovement : MonoBehaviour {
 		currentProgress = 0;
 		//Similar to the healtbar, we need to set the value of the Progress Bar/Slider object
 		progressBar.value = CalculateProgress();
+		//Display text for the progress bar. For now, we can have it set to nothing
+		//But once it is full, we will
+		progressBarText.text = "";
 
-		attacking = false;
 
 	}
 	
-	
+	//Consists of parts of movement code and attacking code
 	void Update ()
 	{
 		///NEW Movement Code
@@ -75,33 +87,62 @@ public class PlayerMovement : MonoBehaviour {
 
 		//Displays the CURRENT health
 		healthBarText.text = "Health: " + Mathf.Round(currentHealth);
-		//Displays the CURRENT progress
-		progressBar.value = CalculateProgress();
+
+		//Display a prompt when the player reaches the max amount of Progress
+		if (currentProgress == maxProgress)
+		{
+			progressBarText.text = "Press L!";
+			if (Input.GetKey(KeyCode.L))
+			{
+				Debug.Log("Get Weapon");
+				state = PlayerState.GUN;
+			}
+		}
+
 
 		///Attacking Code
 		//Time between attack starts off as StartTimeBtwAttack everytime it is less than 0
 		//It seems like a paradox in the way its written here, actually.
 		if (timeBtwAttack <= 0)
 		{
-			
-			//Enable the attack
-			if (Input.GetKey("space"))
-			{
-				player_anim.SetTrigger("attack");
 
-				Debug.Log("Attacking");
-		
-				timeBtwAttack = startTimeBtwAttack;
+
+			if (state == PlayerState.SHIELD)
+			{
+				//Enable the attack
+				if (Input.GetKey("space"))
+				{
+					player_anim.SetTrigger("attack");
+
+					Debug.Log("Attacking");
+
+					timeBtwAttack = startTimeBtwAttack;
+
+				}
 			}
 
-			
+			if (state == PlayerState.GUN)
+			{
+				//Enable the attack
+				if (Input.GetKey("space"))
+				{
+
+					Debug.Log("Attacking with Gun");
+					Fire();
+					timeBtwAttack = startTimeBtwAttack;
+
+				}
+			}
+
+
+
 		}
 
 		else
 		{
 			//Start counting down to allow attack
 			timeBtwAttack -= Time.deltaTime;
-				
+			
 		}
 
 		
@@ -145,6 +186,21 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
+	void Fire()
+	{
+		// Create the Bullet from the Bullet Prefab
+		var bullet = (GameObject)Instantiate(
+			bulletPrefab,
+			bulletSpawn.position,
+			bulletSpawn.rotation);
+
+		// Add velocity to the bullet
+		bullet.GetComponent<Rigidbody2D>().velocity = bullet.transform.right * 6;
+
+		// Destroy the bullet after 2 seconds
+		Destroy(bullet, 2.0f);
+	}
+
 	//This function deals damage to the game object it is attached to
 	//By "deal damage", i technically mean that this function will subtract
 	//damageValue from currentHealth
@@ -173,16 +229,15 @@ public class PlayerMovement : MonoBehaviour {
 	public void RestoreHealth(float healthGained)
 	{
 		Debug.Log("Healing");
-		//Deal damage to the health bar
-		currentHealth += healthGained;
-		healthBar.value = CalculateHealth();
-
 		//Prevent the player from restoring full health
 		if (currentHealth >= maxHealth)
 		{
-			currentHealth -= 1;
+			currentHealth = maxHealth;
 			Debug.Log("Health has been restored to full");
 		}
+
+		currentHealth += healthGained;
+		healthBar.value = CalculateHealth();
 
 
 	}

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ProjectileControl : MonoBehaviour {
 	public float speed;
-	public int damage;
 	private Transform player;
 	private GameObject playerObject;
 	private Vector2 target;
@@ -63,7 +62,7 @@ public class ProjectileControl : MonoBehaviour {
 
 		}
 
-		if (collisionInfo.gameObject.tag == "shield_tag")
+		if (collisionInfo.gameObject.tag == "shield_tag" )
 		{
 			reflectProjectile = true;
 			//Now that this is true, the projectile can now damage enemies!
@@ -73,7 +72,7 @@ public class ProjectileControl : MonoBehaviour {
 			//Whenever I reflect the projectile, the player still ends up taking damage
 			//So a fix would be to restore health at the same time
 			//We use the playerObject that we instantiated earlier
-			playerObject.GetComponent<PlayerMovement>().RestoreHealth(6);
+			playerObject.GetComponent<PlayerMovement>().RestoreHealth(5);
 
 			
 		}

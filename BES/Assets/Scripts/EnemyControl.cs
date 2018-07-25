@@ -108,6 +108,7 @@ public class EnemyControl : MonoBehaviour {
 		if (other.gameObject.tag == "projectile" && other.gameObject.GetComponent<ProjectileControl>().damageEnemies == true)
 		{
 			DealDamage(5);
+			Destroy(other.gameObject);
 			playerObject.GetComponent<PlayerMovement>().fillBar(5);
 		}
 	}
