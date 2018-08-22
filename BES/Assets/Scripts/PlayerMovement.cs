@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	public enum PlayerState {SHIELD,GUN}
 
+
+
 	///Movement Variables
 	Rigidbody2D player_rb;
 	public float speed;
@@ -69,6 +71,13 @@ public class PlayerMovement : MonoBehaviour {
 		//But once it is full, we will
 		progressBarText.text = "";
 
+		//Camera testing stuff
+		float height = 2 * Camera.main.orthographicSize;
+		float width = height * Camera.main.aspect;
+		print("The Height is " + height);
+		print("the width is " + width);
+	
+
 
 	}
 	
@@ -110,6 +119,11 @@ public class PlayerMovement : MonoBehaviour {
 			if (state == PlayerState.SHIELD)
 			{
 				//Enable the attack
+				//Important to note that I am using place holder assets right now
+				//So the sheild hitbox is a seperate object. This could server to be problematic once art is implemented
+				//Solution:
+				//Look back at the blackthornpord sword tutorial and recreate the code from there. This code right now
+				//is already based on that after all. 
 				if (Input.GetKey("space"))
 				{
 					player_anim.SetTrigger("attack");
@@ -123,14 +137,20 @@ public class PlayerMovement : MonoBehaviour {
 
 			if (state == PlayerState.GUN)
 			{
+				//Decrease the bar over time
+				lowerBar(5f);
 				//Enable the attack
 				if (Input.GetKey("space"))
 				{
-
+					lowerBar(5f);
 					Debug.Log("Attacking with Gun");
 					Fire();
 					timeBtwAttack = startTimeBtwAttack;
-
+					
+				}
+				if (currentProgress == 0)
+				{
+					state = PlayerState.SHIELD;
 				}
 			}
 
@@ -199,6 +219,20 @@ public class PlayerMovement : MonoBehaviour {
 
 		// Destroy the bullet after 2 seconds
 		Destroy(bullet, 2.0f);
+	}
+
+	//This function lowers the bar when the weapon is active
+	public void lowerBar(float lowerValue)
+	{
+		currentProgress -= lowerValue *Time.deltaTime;
+		progressBar.value = CalculateProgress();
+
+		if (currentProgress <= 0)
+		{
+			currentProgress = 0;
+			state = PlayerState.SHIELD;
+
+		}
 	}
 
 	//This function deals damage to the game object it is attached to

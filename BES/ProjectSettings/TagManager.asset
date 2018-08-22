@@ -7,6 +7,8 @@ TagManager:
   - projectile
   - shield_tag
   - enemy
+  - player_projectile
+  - move spot
   layers:
   - Default
   - TransparentFX

@@ -7,15 +7,18 @@ public class EnemyControl : MonoBehaviour {
 	public float speed;
 	public float stoppingDistance;
 	public float retreatDistance;
+	public float enemyRetreat;
 
 	//This is very similar to the code that is present in reflecting the shield.
 	private float timeBtwShots;
 	public float startTimeBtwShots;
 
 
-	//Stuff that goes in the inspector to make this script work well
+	//Stuff that goes in the inspector to make this script work well 
+	//These are typically the other components of the enemies
 	public GameObject projectile;
 	public Transform player;
+
 
 	///Health Bar Variables
 	public float currentHealth { get; set; }
@@ -38,21 +41,25 @@ public class EnemyControl : MonoBehaviour {
 	void Update () {
 
 		//If the enemy is far away from the player, move closer
-		if (Vector2.Distance(transform.position, player.position) > stoppingDistance) 
-		{
-			transform.position = Vector2.MoveTowards(transform.position, player.position, speed *Time.deltaTime);
-		}
-		//If it is near, stop moving
-		else if (Vector2.Distance(transform.position, player.position) < stoppingDistance && Vector2.Distance(transform.position, player.position) > retreatDistance)
-		{
-			transform.position = this.transform.position;
-		}
-		//It may also want to retreat as well if the player gets closer while its stopped
-		else if (Vector2.Distance(transform.position, player.position) < retreatDistance)
-		{
-			transform.position = Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime);
-		}
+	
+			if (Vector2.Distance(transform.position, player.position) > stoppingDistance)
+			{
+				transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
 
+			}
+
+			//If it is near, stop moving
+			else if (Vector2.Distance(transform.position, player.position) < stoppingDistance && Vector2.Distance(transform.position, player.position) > retreatDistance)
+			{
+				transform.position = this.transform.position;
+			}
+
+			//It may also want to retreat as well if the player gets closer while its stopped
+			else if (Vector2.Distance(transform.position, player.position) < retreatDistance)
+			{
+				transform.position = Vector2.MoveTowards(transform.position, player.position, -speed * Time.deltaTime);
+
+			}
 
 		//Like in attacking with our player, we want to prevent constant shooting.
 		if (timeBtwShots <= 0)
@@ -69,7 +76,6 @@ public class EnemyControl : MonoBehaviour {
 			timeBtwShots -= Time.deltaTime;
 		}
 
-	
 	}
 
 	float CalculateHealth()
@@ -87,16 +93,16 @@ public class EnemyControl : MonoBehaviour {
 
 		//Deal damage to the health bar
 		currentHealth -= damageValue;
-	
+
 		//If the character is out of health, they die
 		if (currentHealth <= 0)
 		{
-	
+
 			print("Enemy died");
 			Destroy(gameObject);
 		}
 
-	
+
 
 
 
@@ -111,6 +117,28 @@ public class EnemyControl : MonoBehaviour {
 			Destroy(other.gameObject);
 			playerObject.GetComponent<PlayerMovement>().fillBar(5);
 		}
+
+
+	}
+
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		if (other.gameObject.tag == "player_projectile")
+		{
+			DealDamage(5);
+			Destroy(other.gameObject);
+		}
 	}
 
 }
+
+
+
+
+
+
+
+	
+	
+
+	

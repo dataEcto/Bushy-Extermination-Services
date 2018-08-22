@@ -30,14 +30,14 @@ public class ProjectileControl : MonoBehaviour {
 		//If you want to have a homing projectile towards the player, change "target" with player
 		if (reflectProjectile == false)
 		{
-			transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 	
 		}
 		//This allows for reflection
 		else
 		{
-			transform.position = Vector2.MoveTowards(transform.position, target, -speed * Time.deltaTime);
-			
+			transform.Translate(Vector3.right * speed * Time.deltaTime);
+
 		}
 		
 
@@ -74,7 +74,7 @@ public class ProjectileControl : MonoBehaviour {
 			//We use the playerObject that we instantiated earlier
 			playerObject.GetComponent<PlayerMovement>().RestoreHealth(5);
 
-			
+
 		}
 
 	}
