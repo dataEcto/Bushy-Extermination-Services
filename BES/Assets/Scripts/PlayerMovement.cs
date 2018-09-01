@@ -35,10 +35,6 @@ public class PlayerMovement : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public Transform bulletSpawn;
 
-	//Parameters for OverlapCircleAll()
-	public Transform attackPos;
-	public float attackRange;
-	public LayerMask whatIsProjectile;
 
 	//State Control
 	public PlayerState state = PlayerState.SHIELD;
@@ -285,10 +281,5 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	//Visual representation of hitbox
-	void OnDrawGizmosSelected()
-	{
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(attackPos.position, attackRange);
-	}
+
 }
